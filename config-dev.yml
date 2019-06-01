@@ -1,0 +1,113 @@
+server:
+  port: @server.port@
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: @log.dir@
+      file-date-format: .yyyy-MM-dd
+      pattern: '%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i" %D'
+      prefix: access_log
+      suffix: .log
+      rename-on-rotate: false
+      request-attributes-enabled: false
+      rotate: true
+#日志配置
+logging:
+  config: classpath:log4j2.xml
+  
+kafka:
+   topic: @kafka.topic@      
+#数据存储
+spring:
+  data:
+    mongodb:
+      uri: @mongodb.uri@
+  kafka:
+    producer:
+      bootstrap-servers: @kafka.bootstrap-servers@    
+  redis:
+    host: @redis.host@
+    port: @redis.port@
+    pool:
+      max-active: 10
+      max-idle: 5
+      max-wait: 1000
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+
+#监控管理
+endpoints:
+  enabled: true
+  sensitive: false
+  shutdown:
+    enabled: true
+    sensitive: true
+management:
+  security:
+    enabled: true
+    roles: SUPERUSER
+  context-path: /manage
+
+#管理账号
+security:
+  user:
+    name: @manage.user@
+    password: @manage.pwd@
+  basic:
+    path: /manage/shutdown,/manage/heapdump,/manage/dump
+
+pay:
+  base:
+    url: @pay.base.url@
+
+channel:
+  base:
+    url: @channel.base.url@
+  appId: @channel.appId@
+  appKey: @channel.appKey@
+
+api:
+  retry: 3,1000
+  timeout: 5000
+  userInfo: @api.userInfo@
+  userPermission: @api.userPermission@
+
+auth:
+  enable: @auth.enable@
+sych:
+  enable: @sych.enable@
+superuser:
+  tenantIds: 2018032100001
+
+#缓存
+cache:
+  multiguava:
+    defaultSpec: maximumSize=64,expireAfterWrite=5m
+    specs:
+      userPerm: maximumSize=2048,expireAfterWrite=5m
+      acctId: maximumSize=1024,expireAfterWrite=10m
+      
+#基础数据账户明细接口
+acct:
+  api: @acct.detail.api@
+  uniSource: @acct.uni_source@
+  timeout: 5000
+  retry: 3
+  retryInterval: 1500 
+  
+bizflows:
+  flows:
+    stlCouponClear:
+      - updateCouponPaidInProcessor
+coupon:
+  write:
+    batch: 1000      
+  
+ #订单接口
+order:
+  api: http://api.ffan.com/trade/orders
+  timeout: 5000
+  retry: 3
+  retryInterval: 1500  
